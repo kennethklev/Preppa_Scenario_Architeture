@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preppa Scenario Architecture — Complete Visual Tree</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Warm Enterprise Palette */
+            --bone: #F4F1EC;
+            --ink: #1F1E1C;
+            --navy: #2B3440;
+            --forest: #2F4A3C;
+            --amber: #C47A3D;
+            --text-secondary: #6B6259;
+            --text-tertiary: #A39687;
+            --border: #E8E3DB;
+            
+            /* Semantic Colors */
+            --directive: #C47A3D;
+            --facilitative: #4A7C59;
+            --receptive: #5B7C9E;
+            
+            --foundational: #2F4A3C;
+            --supporting: #8B7355;
+            --polish: #A39687;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #F8F6F1 0%, #EBE7DD 100%);
+            font-family: 'Crimson Pro', serif;
+            color: var(--ink);
+            padding: 60px 40px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 80px;
+            animation: fadeIn 1s ease-out;
+        }
+        
+        h1 {
+            font-size: 56px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+        
+        .subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+        
+        .legend {
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'DM Mono', monospace;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .legend-dot.foundational { background: var(--foundational); }
+        .legend-dot.supporting { background: var(--supporting); }
+        .legend-dot.polish { background: var(--polish); }
+        
+        /* Tree Structure */
+        .tree {
+            position: relative;
+            animation: slideUp 1s ease-out 0.2s backwards;
+        }
+        
+        .level {
+            margin-bottom: 60px;
+        }
+        
+        .level-title {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-tertiary);
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+        
+        /* Clusters (Level 1) */
+        .clusters {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 60px;
+        }
+        
+        .cluster-card {
+            background: white;
+            border: 3px solid;
+            border-radius: 16px;
+            padding: 32px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cluster-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            opacity: 0.3;
+            transition: opacity 0.3s;
+        }
+        
+        .cluster-card.directive { border-color: var(--directive); }
+        .cluster-card.directive::before { background: var(--directive); }
+        
+        .cluster-card.facilitative { border-color: var(--facilitative); }
+        .cluster-card.facilitative::before { background: var(--facilitative); }
+        
+        .cluster-card.receptive { border-color: var(--receptive); }
+        .cluster-card.receptive::before { background: var(--receptive); }
+        
+        .cluster-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(31, 30, 28, 0.12);
+        }
+        
+        .cluster-card:hover::before {
+            opacity: 1;
+        }
+        
+        .cluster-card.active {
+            transform: scale(1.02);
+            box-shadow: 0 16px 48px rgba(31, 30, 28, 0.16);
+        }
+        
+        .cluster-name {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--navy);
+        }
+        
+        .cluster-tagline {
+            font-size: 16px;
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+        
+        .cluster-scenarios {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Scenarios & Situations (Collapsible Tree) */
+        .scenario-tree {
+            display: none;
+            margin-top: 40px;
+            padding-left: 40px;
+            border-left: 3px solid var(--border);
+            animation: expandDown 0.5s ease-out;
+        }
+        
+        .scenario-tree.visible {
+            display: block;
+        }
+        
+        .scenario-section {
+            margin-bottom: 40px;
+        }
+        
+        .scenario-header {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 20px 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .scenario-header:hover {
+            border-color: var(--amber);
+            background: #FFFBF7;
+        }
+        
+        .scenario-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--navy);
+        }
+        
+        .expand-icon {
+            font-size: 20px;
+            color: var(--text-tertiary);
+            transition: transform 0.3s;
+        }
+        
+        .scenario-header.active .expand-icon {
+            transform: rotate(90deg);
+        }
+        
+        /* Situations */
+        .situations {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .situations.visible {
+            display: block;
+            animation: expandDown 0.4s ease-out;
+        }
+        
+        .situations-level-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-tertiary);
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+        
+        .situation-categories {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        
+        .situation-category {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+        
+        .category-header {
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+        
+        .category-level {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-tertiary);
+            margin-bottom: 6px;
+        }
+        
+        .category-label {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--navy);
+        }
+        
+        .specific-scenarios {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .scenarios-level {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-tertiary);
+            margin-bottom: 12px;
+        }
+        
+        .specific-scenario {
+            background: var(--bone);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 14px;
+            color: var(--ink);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        
+        .specific-scenario:hover {
+            border-color: var(--amber);
+            background: white;
+            transform: translateX(4px);
+        }
+        
+        /* Key Elements Panel */
+        .key-elements-panel {
+            display: none;
+            margin-top: 60px;
+            background: white;
+            border: 3px solid var(--navy);
+            border-radius: 20px;
+            padding: 48px;
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .key-elements-panel.visible {
+            display: block;
+        }
+        
+        .panel-header {
+            margin-bottom: 40px;
+        }
+        
+        .panel-header .level-title {
+            margin-bottom: 16px;
+        }
+        
+        .panel-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 8px;
+        }
+        
+        .panel-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+        }
+        
+        .key-elements {
+            display: grid;
+            gap: 32px;
+        }
+        
+        .key-element {
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            background: linear-gradient(135deg, #FEFDFB 0%, #F9F7F3 100%);
+        }
+        
+        .element-header {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border);
+        }
+        
+        .element-number {
+            font-family: 'DM Mono', monospace;
+            font-size: 12px;
+            color: var(--amber);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+        
+        .element-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 8px;
+        }
+        
+        .element-purpose {
+            font-size: 16px;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+        
+        /* Facets by Tier */
+        .facets-by-tier {
+            display: grid;
+            gap: 24px;
+        }
+        
+        .tier-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border-left: 4px solid;
+        }
+        
+        .tier-section.foundational { border-left-color: var(--foundational); }
+        .tier-section.supporting { border-left-color: var(--supporting); }
+        .tier-section.polish { border-left-color: var(--polish); }
+        
+        .tier-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .tier-badge {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            color: white;
+        }
+        
+        .tier-badge.foundational { background: var(--foundational); }
+        .tier-badge.supporting { background: var(--supporting); }
+        .tier-badge.polish { background: var(--polish); }
+        
+        .tier-description {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+        
+        .facet-list {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .facet-item {
+            background: var(--bone);
+            border-radius: 8px;
+            padding: 16px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .facet-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(31, 30, 28, 0.08);
+        }
+        
+        .facet-code {
+            font-family: 'DM Mono', monospace;
+            font-size: 12px;
+            color: var(--amber);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .facet-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 6px;
+        }
+        
+        .facet-detection {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        
+        /* Back Button */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--navy);
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 32px;
+        }
+        
+        .back-button:hover {
+            border-color: var(--amber);
+            background: var(--bone);
+            transform: translateX(-4px);
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes expandDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 5000px;
+            }
+        }
+        
+        /* Stats Panel */
+        .stats-panel {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            margin-top: 60px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--amber);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        
+        .stat-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Preppa Scenario Architecture</h1>
+            <p class="subtitle">Complete Visual Hierarchy — Clusters → Scenarios → Situations → Elements → Facets</p>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-dot foundational"></div>
+                    <span>Foundational (Must Pass)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot supporting"></div>
+                    <span>Supporting (Strengthens)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot polish"></div>
+                    <span>Polish (Optimizes)</span>
+                </div>
+            </div>
+        </header>
+        
+        <div class="tree">
+            <!-- LEVEL 1: CLUSTERS -->
+            <div class="level">
+                <div class="level-title">Level 1 — Leadership Interaction Mode</div>
+                <div class="clusters">
+                    <div class="cluster-card directive" onclick="selectCluster('directive')">
+                        <div class="cluster-name">DIRECTIVE</div>
+                        <div class="cluster-tagline">"Leader has a message to deliver"</div>
+                        <div class="cluster-scenarios">Difficult Conversation • Delegation</div>
+                    </div>
+                    
+                    <div class="cluster-card facilitative" onclick="selectCluster('facilitative')">
+                        <div class="cluster-name">FACILITATIVE</div>
+                        <div class="cluster-tagline">"Leader draws out thinking"</div>
+                        <div class="cluster-scenarios">1-1 Check-ins • Motivation • Alignment</div>
+                    </div>
+                    
+                    <div class="cluster-card receptive" onclick="selectCluster('receptive')">
+                        <div class="cluster-name">RECEPTIVE</div>
+                        <div class="cluster-tagline">"Leader receives feedback"</div>
+                        <div class="cluster-scenarios">Receiving Feedback</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- DIRECTIVE SCENARIOS -->
+            <div id="directive-scenarios" class="scenario-tree">
+                <div class="scenario-section">
+                    <div class="scenario-header" onclick="toggleScenario('difficult-conv')">
+                        <div class="scenario-title">The Difficult Conversation</div>
+                        <div class="expand-icon">›</div>
+                    </div>
+                    
+                    <div id="difficult-conv" class="situations">
+                        <div class="situations-level-label">Level 3 — Situation Category</div>
+                        
+                        <div class="situation-categories">
+                            <div class="situation-category">
+                                <div class="category-header">
+                                    <div class="category-level">Level 3</div>
+                                    <div class="category-label">Performance Issue</div>
+                                </div>
+                                <div class="scenarios-level">Level 4 — Specific Scenarios:</div>
+                                <div class="specific-scenarios">
+                                    <div class="specific-scenario" onclick="showKeyElements('directive', 'Missed Deadline')">Missed Deadline</div>
+                                    <div class="specific-scenario" onclick="showKeyElements('directive', 'Low Quality Work')">Low Quality Work</div>
+                                    <div class="specific-scenario" onclick="showKeyElements('directive', 'Incomplete Deliverables')">Incomplete Deliverables</div>
+                                    <div class="specific-scenario" onclick="showKeyElements('directive', 'Lack of Initiative')">Lack of Initiative</div>
+                                    <div class="specific-scenario" onclick="showKeyElements('directive', 'Inconsistent Output')">Inconsistent Output</div>
+                                </div>
+                            </div>
+                            
+                            <div class="situation-category">
+                                <div class="category-header">
+                                    <div class="category-level">Level 3</div>
+                                    <div class="category-label">Behavioral Issue</div>
+                                </div>
+                                <div class="scenarios-level">Level 4 — Specific Scenarios:</div>
+                                <div class="specific-scenarios">
+                                    <div class="specific-scenario" onclick="showKeyElements('directive', 'Backbiting')">Backbiting</div>
+                                    <div class="specific-scenario" onclick="showKeyElements('directive', 'Team Conflict')">Team Conflict</div>
+                                    <div class="specific-scenario" onclick="showKeyElements('directive', 'Unprofessional Communication')">Unprofessional Communication</div>
+                                    <div class="specific-scenario" onclick="showKeyElements('directive', 'Resistance to Feedback')">Resistance to Feedback</div>
+                                    <div class="specific-scenario" onclick="showKeyElements('directive', 'Undermining Authority')">Undermining Authority</div>
+                                </div>
+                            </div>
+                            
+                            <div class="situation-category">
+                                <div class="category-header">
+                                    <div class="category-level">Level 3</div>
+                                    <div class="category-label">Unidentified Concern</div>
+                                </div>
+                                <div class="scenarios-level">Level 4 — Specific Scenarios:</div>
+                                <div class="specific-scenarios">
+                                    <div class="specific-scenario" onclick="showKeyElements('directive', 'Withdrawn Team Member')">Withdrawn Team Member</div>
+                                    <div class="specific-scenario" onclick="showKeyElements('directive', 'Declining Engagement')">Declining Engagement</div>
+                                    <div class="specific-scenario" onclick="showKeyElements('directive', 'Unexplained Tension')">Unexplained Tension</div>
+                                    <div class="specific-scenario" onclick="showKeyElements('directive', 'Changed Performance Pattern')">Changed Performance Pattern</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="scenario-section">
+                    <div class="scenario-header">
+                        <div class="scenario-title">Delegation</div>
+                        <div class="expand-icon">›</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FACILITATIVE SCENARIOS -->
+            <div id="facilitative-scenarios" class="scenario-tree">
+                <div class="scenario-section">
+                    <div class="scenario-header" onclick="toggleScenario('check-ins')">
+                        <div class="scenario-title">Regular 1-1 Check-ins</div>
+                        <div class="expand-icon">›</div>
+                    </div>
+                    
+                    <div id="check-ins" class="situations">
+                        <div class="situations-level-label">Level 3 — Situation Category</div>
+                        
+                        <div class="situation-categories">
+                            <div class="situation-category">
+                                <div class="category-header">
+                                    <div class="category-level">Level 3</div>
+                                    <div class="category-label">Progress Review</div>
+                                </div>
+                                <div class="scenarios-level">Level 4 — Specific Scenarios:</div>
+                                <div class="specific-scenarios">
+                                    <div class="specific-scenario" onclick="showKeyElements('facilitative', 'Project Status Update')">Project Status Update</div>
+                                    <div class="specific-scenario" onclick="showKeyElements('facilitative', 'Blocked on Resources')">Blocked on Resources</div>
+                                    <div class="specific-scenario" onclick="showKeyElements('facilitative', 'Seeking Direction')">Seeking Direction</div>
+                                </div>
+                            </div>
+                            
+                            <div class="situation-category">
+                                <div class="category-header">
+                                    <div class="category-level">Level 3</div>
+                                    <div class="category-label">Career Development</div>
+                                </div>
+                                <div class="scenarios-level">Level 4 — Specific Scenarios:</div>
+                                <div class="specific-scenarios">
+                                    <div class="specific-scenario" onclick="showKeyElements('facilitative', 'Promotion Readiness')">Promotion Readiness</div>
+                                    <div class="specific-scenario" onclick="showKeyElements('facilitative', 'Skill Gap Discussion')">Skill Gap Discussion</div>
+                                    <div class="specific-scenario" onclick="showKeyElements('facilitative', 'Career Path Exploration')">Career Path Exploration</div>
+                                </div>
+                            </div>
+                            
+                            <div class="situation-category">
+                                <div class="category-header">
+                                    <div class="category-level">Level 3</div>
+                                    <div class="category-label">Team Dynamics</div>
+                                </div>
+                                <div class="scenarios-level">Level 4 — Specific Scenarios:</div>
+                                <div class="specific-scenarios">
+                                    <div class="specific-scenario" onclick="showKeyElements('facilitative', 'Collaboration Challenge')">Collaboration Challenge</div>
+                                    <div class="specific-scenario" onclick="showKeyElements('facilitative', 'Relationship Issue')">Relationship Issue</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- RECEPTIVE SCENARIOS -->
+            <div id="receptive-scenarios" class="scenario-tree">
+                <div class="scenario-section">
+                    <div class="scenario-header">
+                        <div class="scenario-title" onclick="showKeyElements('receptive', 'Receiving Feedback')">Receiving Feedback</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- KEY ELEMENTS PANEL -->
+        <div id="key-elements-panel" class="key-elements-panel">
+            <button class="back-button" onclick="hideKeyElements()">← Back to Scenarios</button>
+            
+            <div class="panel-header">
+                <div class="level-title">Level 5 — Key Elements</div>
+                <div class="panel-title" id="selected-scenario-title">Backbiting</div>
+                <div class="panel-subtitle" id="selected-cluster-subtitle">DIRECTIVE Cluster • The Difficult Conversation</div>
+            </div>
+            
+            <div id="key-elements-content" class="key-elements">
+                <!-- Content will be injected by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- STATS PANEL -->
+        <div class="stats-panel">
+            <div class="stat-item">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Clusters</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">6+</div>
+                <div class="stat-label">Scenario Types</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">27</div>
+                <div class="stat-label">Key Elements</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">77+</div>
+                <div class="stat-label">Total Facets</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">38</div>
+                <div class="stat-label">Foundational</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">31</div>
+                <div class="stat-label">Supporting</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Data structure for Key Elements by Cluster
+        const keyElementsData = {
+            directive: {
+                elements: [
+                    {
+                        number: 'Key Element 1',
+                        name: 'Get to the Point',
+                        purpose: 'Establish what conversation is about and why it matters',
+                        facets: {
+                            foundational: [
+                                {
+                                    code: 'COM.IMPORT.F1',
+                                    name: 'Importance Stated',
+                                    detection: 'Uses importance markers ("important", "need to discuss", "affects")'
+                                },
+                                {
+                                    code: 'COM.SPEC.F1',
+                                    name: 'Specific Behavior Referenced',
+                                    detection: 'Cites time/place/action specifics (e.g., "In Tuesday\'s meeting, you arrived 15 minutes late")'
+                                },
+                                {
+                                    code: 'COM.DIRECT.F1',
+                                    name: 'Direct Communication',
+                                    detection: 'No excessive hedging, clear statement (e.g., "I need to talk to you about...")'
+                                }
+                            ],
+                            supporting: [
+                                {
+                                    code: 'COM.SPECIFICITY.S3',
+                                    name: 'Behavioral Precision',
+                                    detection: 'Identifies specific behavior, not vague description'
+                                },
+                                {
+                                    code: 'COM.CALIBRATED.P3',
+                                    name: 'Tone Appropriateness',
+                                    detection: 'Balanced tone, avoids both excessive hedging and blunt abruptness'
+                                }
+                            ],
+                            polish: [
+                                {
+                                    code: 'COM.SEQUENCE.S1',
+                                    name: 'Message-Before-Context',
+                                    detection: 'States main point before explanatory context'
+                                },
+                                {
+                                    code: 'COM.DIRECTNESS.S2',
+                                    name: 'Minimal Preamble',
+                                    detection: 'Gets to point quickly, minimal small talk (within 30 seconds)'
+                                },
+                                {
+                                    code: 'COM.EFFICIENT.P1',
+                                    name: 'Temporal Efficiency',
+                                    detection: 'Delivers within 2 turns and 30 seconds total'
+                                },
+                                {
+                                    code: 'COM.CONCISE.P2',
+                                    name: 'Brevity and Economy',
+                                    detection: 'Core message ≤20 words'
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        number: 'Key Element 2',
+                        name: 'Validate & Understand',
+                        purpose: 'Ensure counterpart feels heard before moving to solutions',
+                        facets: {
+                            foundational: [
+                                {
+                                    code: 'VAL.ACKNOWLEDGE.F1',
+                                    name: 'Explicit Acknowledgment',
+                                    detection: 'Leader explicitly names what counterpart said/felt (e.g., "I hear that you\'re frustrated")'
+                                },
+                                {
+                                    code: 'VAL.DEMONSTRATE.F2',
+                                    name: 'Demonstrates Understanding',
+                                    detection: 'Paraphrase, summary, or reflection shows comprehension'
+                                },
+                                {
+                                    code: 'VAL.RECOGNITION.F3',
+                                    name: 'Counterpart Recognizes Being Heard',
+                                    detection: 'Counterpart signals they feel understood (verbal/nonverbal: "Yes, exactly")'
+                                }
+                            ],
+                            supporting: [
+                                {
+                                    code: 'VAL.SPECIFIC.S1',
+                                    name: 'References Specific Content',
+                                    detection: 'Acknowledgment includes specific details from their explanation'
+                                },
+                                {
+                                    code: 'VAL.SEQUENCE.S2',
+                                    name: 'Precedes Problem-Solving',
+                                    detection: 'Validation happens BEFORE moving to solutions'
+                                },
+                                {
+                                    code: 'VAL.VERIFY.S3',
+                                    name: 'Verifies Understanding',
+                                    detection: 'Uses paraphrase, summary, or alignment check'
+                                }
+                            ],
+                            polish: [
+                                {
+                                    code: 'VAL.CALIBRATED.P1',
+                                    name: 'Tone Matched to Emotional State',
+                                    detection: 'Matching emotional tone (calm to calm, concerned to concerned)'
+                                },
+                                {
+                                    code: 'VAL.CONCISE.P2',
+                                    name: 'Economical Language',
+                                    detection: 'Validation ≤30 words as optimization'
+                                },
+                                {
+                                    code: 'VAL.INVITATION.P3',
+                                    name: 'Invites Elaboration',
+                                    detection: 'Leaves space for deeper exploration when appropriate'
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        number: 'Key Element 3',
+                        name: 'Build Ownership & Commitment',
+                        purpose: 'Counterpart takes ownership of action, not just compliance',
+                        facets: {
+                            foundational: [
+                                {
+                                    code: 'OWN.INVITE.F1',
+                                    name: 'Ownership Invited',
+                                    detection: 'Leader asks counterpart to propose solution (e.g., "What do you think you should do differently?")'
+                                },
+                                {
+                                    code: 'OWN.DEFINED.F2',
+                                    name: 'Counterpart-Defined Action',
+                                    detection: 'Counterpart states action in their own words (not parroting)'
+                                },
+                                {
+                                    code: 'OWN.CLEAR.F3',
+                                    name: 'Clear Actions Established',
+                                    detection: 'At least 2 of: specific action, timeline, follow-up mechanism'
+                                },
+                                {
+                                    code: 'CMT.ACCOUNT.F4',
+                                    name: 'Accountability Established',
+                                    detection: 'At least 1 of: follow-up meeting, check-in date, progress timeline'
+                                }
+                            ],
+                            supporting: [
+                                {
+                                    code: 'OWN.EFFECT.S1',
+                                    name: 'Effect Evaluation Invited',
+                                    detection: 'Leader invites counterpart to assess likely impact'
+                                },
+                                {
+                                    code: 'OWN.SUFFIC.S1',
+                                    name: 'Sufficiency Checked',
+                                    detection: 'Leader confirms action is adequate to address issue'
+                                },
+                                {
+                                    code: 'CMT.CONFIRM.S1',
+                                    name: 'Commitment Confirmed',
+                                    detection: 'Explicit confirmation of agreement'
+                                }
+                            ],
+                            polish: [
+                                {
+                                    code: 'CMT.SUMM.P1',
+                                    name: 'Summary Invited',
+                                    detection: 'Leader invites counterpart to summarize agreement'
+                                },
+                                {
+                                    code: 'CMT.CLOSE.P1',
+                                    name: 'Clear Closure',
+                                    detection: 'Conversation closes efficiently (≤60 seconds after commitment)'
+                                },
+                                {
+                                    code: 'OWN.FOLLOWUP.P3',
+                                    name: 'Establishes Follow-Up',
+                                    detection: 'Specific follow-up timing and mechanism'
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            facilitative: {
+                elements: [
+                    {
+                        number: 'Key Element 1',
+                        name: 'Establish Connection',
+                        purpose: 'Create safe, trusting environment',
+                        facets: {
+                            foundational: [
+                                {
+                                    code: 'CON.GENUINE.F1',
+                                    name: 'Genuine Check-in',
+                                    detection: 'Opens with genuine question, waits for real answer'
+                                },
+                                {
+                                    code: 'CON.ATTENTION.F2',
+                                    name: 'Full Attention Demonstrated',
+                                    detection: 'Phone away, no laptop multitasking'
+                                },
+                                {
+                                    code: 'CON.AGENDA.F3',
+                                    name: 'Counterpart-Set Agenda',
+                                    detection: 'Invites them to set agenda: "What would be most helpful to discuss?"'
+                                }
+                            ],
+                            supporting: [
+                                {
+                                    code: 'CON.ACKNOWLEDGE.S1',
+                                    name: 'Acknowledges Workload/Stress',
+                                    detection: 'References known pressures they\'re facing'
+                                },
+                                {
+                                    code: 'CON.NORMALIZE.S2',
+                                    name: 'Normalizes Challenges',
+                                    detection: 'This is a tough situation" without fixing immediately'
+                                }
+                            ],
+                            polish: [
+                                {
+                                    code: 'CON.VULNERABLE.P1',
+                                    name: 'Shares Appropriate Vulnerability',
+                                    detection: 'Leader admits own struggle in similar situation'
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        number: 'Key Element 2',
+                        name: 'Explore & Support',
+                        purpose: 'Draw out thinking, surface insights',
+                        facets: {
+                            foundational: [
+                                {
+                                    code: 'UND.PERSPECTIVE.F1',
+                                    name: 'Seeks Perspective First',
+                                    detection: 'Asks about their perspective before offering own'
+                                },
+                                {
+                                    code: 'UND.OPEN.F2',
+                                    name: 'Uses Open Questions',
+                                    detection: 'Questions don\'t contain assumed answers'
+                                },
+                                {
+                                    code: 'UND.WAIT.F3',
+                                    name: 'Waits for Thinking',
+                                    detection: 'Comfortable with 3+ second silences'
+                                }
+                            ],
+                            supporting: [
+                                {
+                                    code: 'UND.TRADEOFFS.S1',
+                                    name: 'Helps Articulate Trade-offs',
+                                    detection: 'What are you weighing here?'
+                                },
+                                {
+                                    code: 'UND.PATTERNS.S2',
+                                    name: 'Reflects Patterns',
+                                    detection: 'I notice this is the third time...'
+                                }
+                            ],
+                            polish: [
+                                {
+                                    code: 'UND.CHALLENGE.P1',
+                                    name: 'Challenges Assumptions Constructively',
+                                    detection: 'What if that weren\'t true?'
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        number: 'Key Element 3',
+                        name: 'Build Forward Momentum',
+                        purpose: 'Enable action with ownership',
+                        facets: {
+                            foundational: [
+                                {
+                                    code: 'OWN.CLARIFY.F1',
+                                    name: 'Helps Clarify Next Step',
+                                    detection: 'Conversation ends with clear action'
+                                },
+                                {
+                                    code: 'CON.SUPPORT.F2',
+                                    name: 'Confirms Support Needed',
+                                    detection: 'How can I help?'
+                                },
+                                {
+                                    code: 'OWN.REMOVE.F3',
+                                    name: 'Removes Blockers',
+                                    detection: 'Leader commits to specific enabling action'
+                                }
+                            ],
+                            supporting: [
+                                {
+                                    code: 'CON.CONNECT.S1',
+                                    name: 'Connects to Resources/People',
+                                    detection: 'Leader suggests relevant connections'
+                                },
+                                {
+                                    code: 'OWN.FOLLOWUP.S2',
+                                    name: 'Sets Follow-up Checkpoint',
+                                    detection: 'Let\'s check in on this next week'
+                                }
+                            ],
+                            polish: [
+                                {
+                                    code: 'CON.CELEBRATE.P1',
+                                    name: 'Celebrates Progress',
+                                    detection: 'Leader acknowledges growth/wins'
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            receptive: {
+                elements: [
+                    {
+                        number: 'Key Element 1',
+                        name: 'Create Safety',
+                        purpose: 'Create psychological safety for honest, critical input',
+                        facets: {
+                            foundational: [
+                                {
+                                    code: 'RCV.SAFETY.F1',
+                                    name: 'Safety for Input Created',
+                                    detection: 'Explicit safety signaling: "I genuinely need your honest feedback. There will be no negative consequences."'
+                                },
+                                {
+                                    code: 'RCV.POWER.S1*',
+                                    name: 'Power Dynamic Acknowledged',
+                                    detection: 'Awareness of positional asymmetry (functions as Foundational in this cluster)'
+                                }
+                            ],
+                            supporting: [],
+                            polish: []
+                        }
+                    },
+                    {
+                        number: 'Key Element 2',
+                        name: 'Receive Without Defending',
+                        purpose: 'Listen to feedback without defending, explaining, or minimizing',
+                        facets: {
+                            foundational: [
+                                {
+                                    code: 'RCV.LISTEN.F1',
+                                    name: 'Listens Without Reacting',
+                                    detection: 'No interruptions, defensiveness, or rebuttals'
+                                },
+                                {
+                                    code: 'RCV.THANKS.F2',
+                                    name: 'Thanks Feedback-Giver',
+                                    detection: 'Explicit appreciation expressed'
+                                },
+                                {
+                                    code: 'RCV.CLARIFY.F3',
+                                    name: 'Asks Clarifying Questions',
+                                    detection: 'Can you give me an example?" (not justifying)'
+                                }
+                            ],
+                            supporting: [
+                                {
+                                    code: 'RCV.IMPACT.S1',
+                                    name: 'Acknowledges Impact',
+                                    detection: 'I can see how that affected you'
+                                },
+                                {
+                                    code: 'RCV.RESIST.S2',
+                                    name: 'Resists Explaining Context Immediately',
+                                    detection: 'Focuses on understanding before explaining'
+                                }
+                            ],
+                            polish: [
+                                {
+                                    code: 'RCV.VULNERABLE.P1',
+                                    name: 'Shows Vulnerability About Blind Spots',
+                                    detection: 'I didn\'t realize I was doing that'
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        number: 'Key Element 3',
+                        name: 'Clarify & Commit',
+                        purpose: 'Demonstrate understanding and commit to specific change',
+                        facets: {
+                            foundational: [
+                                {
+                                    code: 'RCV.PARAPHRASE.F1',
+                                    name: 'Paraphrases What Heard',
+                                    detection: 'So what I\'m hearing is...'
+                                },
+                                {
+                                    code: 'RCV.EXAMPLE.F2',
+                                    name: 'Asks for Specific Examples',
+                                    detection: 'Requests concrete instances'
+                                },
+                                {
+                                    code: 'RCV.CHECK.F3',
+                                    name: 'Checks if Interpretation Accurate',
+                                    detection: 'Did I understand that right?'
+                                }
+                            ],
+                            supporting: [
+                                {
+                                    code: 'RCV.PATTERN.S1',
+                                    name: 'Explores Patterns Across Feedback',
+                                    detection: 'I\'m hearing this from multiple people'
+                                },
+                                {
+                                    code: 'RCV.PRIORITY.S2',
+                                    name: 'Distinguishes High vs. Low Priority',
+                                    detection: 'Which of these would make the biggest difference?'
+                                }
+                            ],
+                            polish: [
+                                {
+                                    code: 'RCV.TEST.P1',
+                                    name: 'Tests Understanding with Third Example',
+                                    detection: 'Would this situation also qualify?'
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        };
+        
+        let currentCluster = null;
+        
+        function selectCluster(cluster) {
+            // Remove active class from all clusters
+            document.querySelectorAll('.cluster-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Hide all scenario trees
+            document.querySelectorAll('.scenario-tree').forEach(tree => {
+                tree.classList.remove('visible');
+            });
+            
+            // Hide key elements panel
+            document.getElementById('key-elements-panel').classList.remove('visible');
+            
+            // Activate selected cluster
+            event.target.closest('.cluster-card').classList.add('active');
+            currentCluster = cluster;
+            
+            // Show corresponding scenario tree
+            const scenarioTree = document.getElementById(`${cluster}-scenarios`);
+            if (scenarioTree) {
+                scenarioTree.classList.add('visible');
+            }
+            
+            // Scroll to scenarios
+            setTimeout(() => {
+                scenarioTree.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+        
+        function toggleScenario(scenarioId) {
+            const header = event.currentTarget;
+            const situations = document.getElementById(scenarioId);
+            
+            header.classList.toggle('active');
+            situations.classList.toggle('visible');
+        }
+        
+        function showKeyElements(cluster, scenarioName) {
+            const panel = document.getElementById('key-elements-panel');
+            const content = document.getElementById('key-elements-content');
+            const title = document.getElementById('selected-scenario-title');
+            const subtitle = document.getElementById('selected-cluster-subtitle');
+            
+            // Update title
+            title.textContent = scenarioName;
+            
+            // Update subtitle based on cluster
+            const clusterNames = {
+                directive: 'DIRECTIVE Cluster • The Difficult Conversation',
+                facilitative: 'FACILITATIVE Cluster • Regular 1-1 Check-ins',
+                receptive: 'RECEPTIVE Cluster • Receiving Feedback'
+            };
+            subtitle.textContent = clusterNames[cluster];
+            
+            // Get key elements data
+            const data = keyElementsData[cluster];
+            
+            // Build HTML
+            let html = '';
+            data.elements.forEach(element => {
+                html += `
+                    <div class="key-element">
+                        <div class="element-header">
+                            <div class="element-number">${element.number}</div>
+                            <div class="element-name">${element.name}</div>
+                            <div class="element-purpose">${element.purpose}</div>
+                        </div>
+                        
+                        <div class="facets-by-tier">
+                            ${renderTier('foundational', 'ALL must pass — blocking if absent', element.facets.foundational)}
+                            ${renderTier('supporting', 'Strengthens effectiveness', element.facets.supporting)}
+                            ${renderTier('polish', 'Optimizes delivery', element.facets.polish)}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            content.innerHTML = html;
+            panel.classList.add('visible');
+            
+            // Scroll to panel
+            setTimeout(() => {
+                panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+        
+        function renderTier(tier, description, facets) {
+            if (!facets || facets.length === 0) return '';
+            
+            const tierLabels = {
+                foundational: 'FOUNDATIONAL',
+                supporting: 'SUPPORTING',
+                polish: 'POLISH'
+            };
+            
+            let html = `
+                <div class="tier-section ${tier}">
+                    <div class="tier-header">
+                        <div class="tier-badge ${tier}">${tierLabels[tier]} (Level 7: Tier)</div>
+                        <div class="tier-description">${description}</div>
+                    </div>
+                    <div class="facet-list">
+            `;
+            
+            facets.forEach(facet => {
+                html += `
+                    <div class="facet-item">
+                        <div class="facet-code">${facet.code}</div>
+                        <div class="facet-name">${facet.name}</div>
+                        <div class="facet-detection">${facet.detection}</div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                    </div>
+                </div>
+            `;
+            
+            return html;
+        }
+        
+        function hideKeyElements() {
+            document.getElementById('key-elements-panel').classList.remove('visible');
+            
+            // Scroll back to scenario tree
+            const scenarioTree = document.getElementById(`${currentCluster}-scenarios`);
+            if (scenarioTree) {
+                scenarioTree.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+    </script>
+</body>
+</html>
