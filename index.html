@@ -67,6 +67,50 @@
             font-weight: 400;
         }
         
+        .doctrine-statement {
+            background: white;
+            border: 3px solid var(--forest);
+            border-radius: 12px;
+            padding: 28px 40px;
+            margin: 32px auto;
+            max-width: 1000px;
+            box-shadow: 0 4px 16px rgba(47, 74, 60, 0.12);
+        }
+        
+        .doctrine-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--forest);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+        }
+        
+        .doctrine-statement p {
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--ink);
+            margin-bottom: 12px;
+        }
+        
+        .doctrine-statement p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .doctrine-statement strong {
+            color: var(--forest);
+            font-weight: 700;
+        }
+        
+        .doctrine-emphasis {
+            font-style: italic;
+            color: var(--navy);
+            font-weight: 600;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 2px solid var(--border);
+        }
+        
         .legend {
             display: flex;
             gap: 32px;
@@ -582,6 +626,12 @@
         <header>
             <h1>Preppa Scenario Architecture</h1>
             <p class="subtitle">Complete Visual Hierarchy — Clusters → Scenarios → Situations → Elements → Facets</p>
+            
+            <div class="doctrine-statement">
+                <div class="doctrine-title">Core Intellectual Property Claim</div>
+                <p>Preppa is built on a <strong>non-compensatory behavioral evaluation architecture</strong>. Leadership behavior is decomposed into atomic, observable facets organized in a hierarchical dependency structure. Certain behaviors are defined as foundational and must be present for a leadership interaction to be considered successful. Strength in supporting or polish behaviors cannot compensate for missing foundational behaviors.</p>
+                <p class="doctrine-emphasis">Preppa does not measure how leaders think they lead. It detects whether leadership behavior actually occurred.</p>
+            </div>
             
             <div class="legend">
                 <div class="legend-item">
@@ -1301,6 +1351,8 @@
                             <div class="element-name">${element.name}</div>
                             <div class="element-purpose">${element.purpose}</div>
                         </div>
+                        
+                        <div class="level-title" style="margin-bottom: 16px;">Level 6 — Facets (Observable Behaviors)</div>
                         
                         <div class="facets-by-tier">
                             ${renderTier('foundational', 'ALL must pass — blocking if absent', element.facets.foundational)}
